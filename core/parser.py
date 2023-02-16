@@ -179,6 +179,8 @@ class Parser:
                 }} for player in match.players]
             )
 
+        print(json.dumps(json_matches, indent=4))
+
         output = open(output_file, "w")
         output.write(json.dumps(json_matches, indent=4))
         output.close()
