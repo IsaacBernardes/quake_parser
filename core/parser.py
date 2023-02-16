@@ -1,7 +1,9 @@
 import re
 import math
+import json
 from datetime import time
 from typing import List, Optional
+
 from core.match import Match
 from core.player import Player
 
@@ -164,3 +166,19 @@ class Parser:
 
     def _remove_special_characters(self, input_string):
         return re.sub(r'[^\w\s]', '', input_string)
+
+    def build_json(self, output_file):
+        json_matches = {}
+        for match in self.finished_matches:
+            json_matches[match.name] = dict(
+                total_kills=match.total_kills,
+                duration=match.time_elapsed,
+                players=[{player.username: {
+                    "score": player.score(),
+                    "character": player.character
+                }} for player in match.players]
+            )
+
+        output = open(output_file, "w")
+        output.write(json.dumps(json_matches, indent=4))
+        output.close()
